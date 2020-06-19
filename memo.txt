@@ -1,0 +1,66 @@
+The files should be checked/updated according to the following order:
+
+0. packages_in_use.R
+   Any new packages being used in any other files should be added here.
+
+1. time_data.R
+   This file contains the original survival time and the domain, (0, 250)
+   Unless new dataset is being used, otherwise this file should not be changed.
+
+2. params.R
+   This is deciding N and related  quantities.
+   Maybe N should be tested from smaller numbers.
+
+3. set_grid.R
+   Now, I have added 
+	* a = 0, min of domain
+   	* b = 250, max of domain
+
+4. inital_inflections.R
+   This is only influenced by set_grid.R file, but the x_grid is used in validate potential values.
+   There are functions of transformations among:
+	* inflection points' locations
+	* inflection points' values
+	* inflection points' values' reparameterization
+
+4. KS_criteria.R
+   This file provided 
+	* the original ecdf, KS bands
+	* new ecdf and new KS bands adaptive to the current grid setting
+
+   
+5. con2_pass_KS_criteria.R
+   This file directly uses(and only influenced by) the results from KS_criteria.R
+   
+6. con1_valid_cdf.R
+   This file directly uses(and only influenced by) the results from KS_criteria.R
+   
+7. con3_unimodal.R
+   This file directly uses initial_inflections.R
+   The most annoying part is the get_unimodality_const_dir() function
+	* This function decides the direction of unimodality constraints
+	* if any of the index of changing the direction is out of bound, there could be issues.
+	* So be careful with the initial_inflections.R file.
+
+8. constraint.R
+   This file uses the following 3 files:
+	* con1_valid_cdf.R
+	* con2_pass_KS_criteria.R
+	* con3_unimodal.R
+
+9. dens_obj.R
+   It depends on set_grid.R file.
+   This files handles objective function coefficients' vector.
+   Now, it only handles the density estimation problem.
+
+10. LP_fix_inflec.R
+    It depends on dens.obj.R and constraints.R files.
+    This file solves the LP problems.
+   TODO: do not update solveLP_greedy yet, before getting result in mat.csv
+
+11. LP_fix_inflec2.R
+   TODO: I did not change anything here yet.
+	Because I forgot what it is.
+
+12. NM.R
+    It depends only on LP_fix_inflec.R file.
